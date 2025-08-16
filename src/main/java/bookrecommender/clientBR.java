@@ -1078,10 +1078,21 @@ public class clientBR extends Application {
 	                    dettaglioBox.getChildren().add(new Label("Nessun utente ha consigliato questo libro."));
 	                } else {
 	                    //dettaglioBox.getChildren().add(new Label("Utenti che hanno consigliato questo libro: " + String.join(", ", consigliano)));
-	                	Label utentiConsiglianoLabel = new Label("Utenti che hanno consigliato questo libro:\n" + String.join(", ", consigliano));
+	                	/*Label utentiConsiglianoLabel = new Label("Utenti che hanno consigliato questo libro:\n" + String.join(", ", consigliano));
 	                	utentiConsiglianoLabel.setWrapText(true);
 	                	utentiConsiglianoLabel.setMaxWidth(750); // Puoi regolare la larghezza come preferisci
-	                	dettaglioBox.getChildren().add(utentiConsiglianoLabel);
+	                	dettaglioBox.getChildren().add(utentiConsiglianoLabel);*/
+	                	VBox utentiBox = new VBox(2); // Spaziatura verticale tra gli elementi
+	                	Label header = new Label("Utenti che hanno consigliato questo libro:");
+	                	utentiBox.getChildren().add(header);
+
+	                	for (int i = 0; i < consigliano.size(); i++) {
+	                	    String utente = consigliano.get(i);
+	                	    Label utenteLabel = new Label((i + 1) + ". " + utente);
+	                	    utentiBox.getChildren().add(utenteLabel);
+	                	}
+
+	                	dettaglioBox.getChildren().add(utentiBox);
 	                	
 	                }
 
@@ -1100,9 +1111,21 @@ public class clientBR extends Application {
 	                } else {
 	                    for (Map.Entry<String, List<String>> entry : mapConsigli.entrySet()) {
 	                        //dettaglioBox.getChildren().add(new Label("L'utente " + entry.getKey() + " consiglia i seguenti libri: " + String.join("/ ", entry.getValue())));
-	                    	Text consigliText = new Text("L'utente " + entry.getKey() + " consiglia i seguenti libri: " + String.join("/ ", entry.getValue()));
+	                    	/*Text consigliText = new Text("L'utente " + entry.getKey() + " consiglia i seguenti libri: " + String.join("/ ", entry.getValue()));
 	                    	consigliText.setWrappingWidth(760); // Larghezza massima prima di andare a capo
-	                    	dettaglioBox.getChildren().add(consigliText);
+	                    	dettaglioBox.getChildren().add(consigliText);*/
+	                    	VBox consigliUtenteBox = new VBox(2); // margine tra le righe
+	                    	Label utenteLabel = new Label("L'utente " + entry.getKey() + " consiglia i seguenti libri:");
+	                    	consigliUtenteBox.getChildren().add(utenteLabel);
+
+	                    	List<String> libri = entry.getValue();
+	                    	for (int i = 0; i < libri.size(); i++) {
+	                    	    String libro = libri.get(i);
+	                    	    Label libroLabel = new Label((i + 1) + ". " + libro);
+	                    	    consigliUtenteBox.getChildren().add(libroLabel);
+	                    	}
+
+	                    	dettaglioBox.getChildren().add(consigliUtenteBox);
 	                    }
 	                }
 
@@ -1357,10 +1380,21 @@ public class clientBR extends Application {
 	                    dettaglioBox.getChildren().add(new Label("Nessun utente ha consigliato questo libro."));
 	                } else {
 	                    //dettaglioBox.getChildren().add(new Label("Utenti che hanno consigliato questo libro: " + String.join(", ", consigliano)));
-	                	Label utentiConsiglianoLabel = new Label("Utenti che hanno consigliato questo libro:\n" + String.join(", ", consigliano));
+	                	/*Label utentiConsiglianoLabel = new Label("Utenti che hanno consigliato questo libro:\n" + String.join(", ", consigliano));
 	                	utentiConsiglianoLabel.setWrapText(true);
 	                	utentiConsiglianoLabel.setMaxWidth(750); // Puoi regolare la larghezza come preferisci
-	                	dettaglioBox.getChildren().add(utentiConsiglianoLabel);
+	                	dettaglioBox.getChildren().add(utentiConsiglianoLabel);*/
+	                	VBox utentiBox = new VBox(2); // Spaziatura verticale tra gli elementi
+	                	Label header = new Label("Utenti che hanno consigliato questo libro:");
+	                	utentiBox.getChildren().add(header);
+
+	                	for (int i = 0; i < consigliano.size(); i++) {
+	                	    String utente = consigliano.get(i);
+	                	    Label utenteLabel = new Label((i + 1) + ". " + utente);
+	                	    utentiBox.getChildren().add(utenteLabel);
+	                	}
+
+	                	dettaglioBox.getChildren().add(utentiBox);
 	                }
 
 	                out.writeObject("getLibriConsigliatiPerLibro");
@@ -1378,9 +1412,21 @@ public class clientBR extends Application {
 	                } else {
 	                    for (Map.Entry<String, List<String>> entry : mapConsigli.entrySet()) {
 	                        //dettaglioBox.getChildren().add(new Label("L'utente " + entry.getKey() + " consiglia i seguenti libri: " + String.join("/ ", entry.getValue())));
-	                    	Text consigliText = new Text("L'utente " + entry.getKey() + " consiglia i seguenti libri: " + String.join("/ ", entry.getValue()));
+	                    	/*Text consigliText = new Text("L'utente " + entry.getKey() + " consiglia i seguenti libri: " + String.join("/ ", entry.getValue()));
 	                    	consigliText.setWrappingWidth(760); // Larghezza massima prima di andare a capo
-	                    	dettaglioBox.getChildren().add(consigliText);
+	                    	dettaglioBox.getChildren().add(consigliText);*/
+	                    	VBox consigliUtenteBox = new VBox(2); // margine tra le righe
+	                    	Label utenteLabel = new Label("L'utente " + entry.getKey() + " consiglia i seguenti libri:");
+	                    	consigliUtenteBox.getChildren().add(utenteLabel);
+
+	                    	List<String> libri = entry.getValue();
+	                    	for (int i = 0; i < libri.size(); i++) {
+	                    	    String libro = libri.get(i);
+	                    	    Label libroLabel = new Label((i + 1) + ". " + libro);
+	                    	    consigliUtenteBox.getChildren().add(libroLabel);
+	                    	}
+
+	                    	dettaglioBox.getChildren().add(consigliUtenteBox);
 	                    }
 	                }
 
