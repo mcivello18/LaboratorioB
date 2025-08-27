@@ -157,6 +157,49 @@ public class ServerSlave extends Thread {
 	            out.writeObject(statistiche);
 	            break;
 	        }
+	        
+	        case "modificaValutazione": {
+	            String utente = (String) in.readObject();
+	            String titolo = (String) in.readObject();
+
+	            int stile = (Integer) in.readObject();
+	            String notaStile = (String) in.readObject();
+
+	            int contenuto = (Integer) in.readObject();
+	            String notaContenuto = (String) in.readObject();
+
+	            int gradevolezza = (Integer) in.readObject();
+	            String notaGradevolezza = (String) in.readObject();
+
+	            int originalita = (Integer) in.readObject();
+	            String notaOriginalita = (String) in.readObject();
+
+	            int edizione = (Integer) in.readObject();
+	            String notaEdizione = (String) in.readObject();
+
+	            boolean successo = b.modificaValutazione(
+	                utente, titolo,
+	                stile, notaStile,
+	                contenuto, notaContenuto,
+	                gradevolezza, notaGradevolezza,
+	                originalita, notaOriginalita,
+	                edizione, notaEdizione
+	            );
+
+	            out.writeObject(successo);
+	            break;
+	        }
+	        
+	        case "modificaConsigliLibri": {
+	            String userid = (String) in.readObject();
+	            String titoloPrincipale = (String) in.readObject();
+	            @SuppressWarnings("unchecked")
+	            List<String> nuoviConsigliati = (List<String>) in.readObject();
+
+	            boolean successo = b.modificaConsigliLibri(userid, titoloPrincipale, nuoviConsigliati);
+	            out.writeObject(successo);
+	            break;
+	        }
 	        	
 	        default:
 	            out.writeObject("Comando non riconosciuto");

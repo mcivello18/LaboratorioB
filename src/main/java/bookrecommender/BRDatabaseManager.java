@@ -9,12 +9,12 @@ public class BRDatabaseManager {
 
 	    public BRDatabaseManager(DBConfigurazione config) throws SQLException, ClassNotFoundException {
 	        
-	        // Costruisci la stringa di connessione con host, dbname, user, pass
+	        
 	        String url = "jdbc:postgresql://localhost:5432/BookRecommender";
 	        conn = DriverManager.getConnection(url, config.getUsername(), config.getPassword());
 	    }
 
-	    // Metodo per verificare se un userid esiste (true = esiste)
+	    
 	    public synchronized boolean existsUserid(String userid) throws SQLException {
 	        String sql = "SELECT 1 FROM UtentiRegistrati WHERE userid = ?";
 	        try (PreparedStatement pst = conn.prepareStatement(sql)) {
@@ -25,7 +25,7 @@ public class BRDatabaseManager {
 	        }
 	    }
 
-	    // Metodo per verificare se un'email esiste
+	    
 	    public synchronized boolean existsEmail(String email) throws SQLException {
 	        String sql = "SELECT 1 FROM UtentiRegistrati WHERE email = ?";
 	        try (PreparedStatement pst = conn.prepareStatement(sql)) {
@@ -36,7 +36,7 @@ public class BRDatabaseManager {
 	        }
 	    }
 
-	    // Metodo per registrare un utente (ritorna true se ok)
+	    
 	    public synchronized boolean registraUtente(Utente u) throws SQLException {
 	        if (existsUserid(u.getUserid()) || existsEmail(u.getEmail())) {
 	            return false; // già presente userid o email
@@ -54,7 +54,7 @@ public class BRDatabaseManager {
 	        }
 	    }
 
-	    // Metodo login: verifica userid + password
+	    
 	    public synchronized boolean login(String userid, String password) throws SQLException {
 	        String sql = "SELECT password FROM UtentiRegistrati WHERE userid = ?";
 	        try (PreparedStatement pst = conn.prepareStatement(sql)) {
@@ -62,7 +62,7 @@ public class BRDatabaseManager {
 	            try (ResultSet rs = pst.executeQuery()) {
 	                if (rs.next()) {
 	                    String pwdFromDb = rs.getString("password");
-	                    return pwdFromDb.equals(password);  // in futuro: hash e salt!
+	                    return pwdFromDb.equals(password);  
 	                } else {
 	                    return false; // userid non trovato
 	                }
@@ -104,7 +104,7 @@ public class BRDatabaseManager {
 	    
 	    public synchronized boolean creaLibreria(String userid, String nomeLibreria, List<String> titoli) throws SQLException {
 	        if (esisteLibreria(userid, nomeLibreria)) {
-	            return false;  // Libreria già presente → blocchiamo
+	            return false;  
 	        }
 
 	        String sql = "INSERT INTO Librerie (utente, nomeLibreria, titolo) VALUES (?, ?, ?)";
@@ -222,7 +222,7 @@ public class BRDatabaseManager {
 	            pst.setString(1, utente);
 	            pst.setString(2, titolo);
 	            try (ResultSet rs = pst.executeQuery()) {
-	                return rs.next();  // true se esiste almeno una riga → valutazione già fatta
+	                return rs.next();  
 	            }
 	        }
 	    }
@@ -321,8 +321,7 @@ public class BRDatabaseManager {
 	        return risultati;
 	    }
 
-	    // Metodo 2: prendi tutte le valutazioni di un libro per utente
-	    // Ritorna lista di array con: userid, stile, nota_stile, contenuto, nota_contenuto, gradevolezza, nota_gradevolezza, originalita, nota_originalita, edizione, nota_edizione, votoFinale
+	    
 	    public synchronized List<String[]> getValutazioniLibro(String titolo) throws SQLException {
 	        List<String[]> results = new ArrayList<>();
 	        String sql = "SELECT utente, stile, nota_stile, contenuto, nota_contenuto, gradevolezza, nota_gradevolezza, " +
@@ -353,7 +352,7 @@ public class BRDatabaseManager {
 	        return results;
 	    }
 
-	    // Metodo 3: utenti che consigliano un libro (titoloLibro)
+	    
 	    public synchronized List<String> getUtentiCheConsigliano(String titoloLibro) throws SQLException {
 	        List<String> results = new ArrayList<>();
 	        String sql = "SELECT DISTINCT userid FROM ConsigliLibri WHERE libroConsigliato = ?";
@@ -369,8 +368,7 @@ public class BRDatabaseManager {
 	        return results;
 	    }
 
-	    // Metodo 4: libri consigliati da utenti per un libro dato (titoloLibro)
-	    // Ritorna lista di array [userid, libroConsigliato]
+	    
 	    public synchronized List<String[]> getLibriConsigliatiPerLibro(String titoloLibro) throws SQLException {
 	        List<String[]> results = new ArrayList<>();
 	        String sql = "SELECT userid, libroConsigliato FROM ConsigliLibri WHERE titoloLibro = ?";
@@ -389,9 +387,7 @@ public class BRDatabaseManager {
 	        return results;
 	    }
 
-	    // Metodo 5: commenti (note) per un libro
-	    // Ritorna lista [userid, criterio, commento]
-	    // Per ogni campo nota_* non nullo e non vuoto crea un record
+	   
 	    public synchronized List<String[]> getCommentiLibro(String titoloLibro) throws SQLException {
 	        List<String[]> results = new ArrayList<>();
 	        String sql = "SELECT utente, nota_stile, nota_contenuto, nota_gradevolezza, nota_originalita, nota_edizione " +
@@ -423,9 +419,7 @@ public class BRDatabaseManager {
 	        return results;
 	    }
 
-	    // Metodo 6: statistiche aggregate di un libro
-	    // Ritorna array stringhe con valori in ordine:
-	    // [numValutazioni, media_stile, media_contenuto, media_gradevolezza, media_originalita, media_edizione, numUtentiConsigliano, numNote]
+	    
 	    public synchronized String[] getStatisticheAggregate(String titoloLibro) throws SQLException {
 	        String sqlValutazioni = "SELECT COUNT(*) as numValutazioni, " +
 	                                "AVG(stile) as media_stile, AVG(contenuto) as media_contenuto, " +
@@ -488,6 +482,102 @@ public class BRDatabaseManager {
 	            String.valueOf(numUtentiConsigliano),
 	            String.valueOf(numNote)
 	        };
+	    }
+	    
+	    public synchronized boolean modificaValutazione(
+	            String utente, String titolo,
+	            int stile, String notaStile,
+	            int contenuto, String notaContenuto,
+	            int gradevolezza, String notaGradevolezza,
+	            int originalita, String notaOriginalita,
+	            int edizione, String notaEdizione
+	    ) throws SQLException {
+	        // Verifica se la valutazione esiste già
+	        if (!valutazioneEsistente(utente, titolo)) {
+	            return false;  // Non esiste → non si può modificare
+	        }
+
+	        // Controlla validità dei voti e delle note
+	        if (!isValutazioneValida(stile, contenuto, gradevolezza, originalita, edizione)) {
+	            return false;
+	        }
+	        if (!isNotaValida(notaStile) || !isNotaValida(notaContenuto) ||
+	            !isNotaValida(notaGradevolezza) || !isNotaValida(notaOriginalita) ||
+	            !isNotaValida(notaEdizione)) {
+	            return false;
+	        }
+
+	        double votoFinale = (stile + contenuto + gradevolezza + originalita + edizione) / 5.0;
+
+	        String sql = "UPDATE ValutazioniLibri SET " +
+	                     "stile = ?, nota_stile = ?, " +
+	                     "contenuto = ?, nota_contenuto = ?, " +
+	                     "gradevolezza = ?, nota_gradevolezza = ?, " +
+	                     "originalita = ?, nota_originalita = ?, " +
+	                     "edizione = ?, nota_edizione = ?, " +
+	                     "votoFinale = ? " +
+	                     "WHERE utente = ? AND titolo = ?";
+
+	        try (PreparedStatement pst = conn.prepareStatement(sql)) {
+	            pst.setInt(1, stile);
+	            pst.setString(2, notaStile);
+
+	            pst.setInt(3, contenuto);
+	            pst.setString(4, notaContenuto);
+
+	            pst.setInt(5, gradevolezza);
+	            pst.setString(6, notaGradevolezza);
+
+	            pst.setInt(7, originalita);
+	            pst.setString(8, notaOriginalita);
+
+	            pst.setInt(9, edizione);
+	            pst.setString(10, notaEdizione);
+
+	            pst.setDouble(11, votoFinale);
+
+	            pst.setString(12, utente);
+	            pst.setString(13, titolo);
+
+	            return pst.executeUpdate() == 1;
+	        }
+	    }
+	    
+	    
+	    public synchronized boolean modificaConsigliLibri(String userid, String titoloPrincipale, List<String> nuoviConsigliati) throws SQLException {
+	        // Verifica che esistano consigli precedenti per questo libro da parte dell’utente
+	        String checkSql = "SELECT 1 FROM ConsigliLibri WHERE userid = ? AND titoloLibro = ? LIMIT 1";
+	        try (PreparedStatement check = conn.prepareStatement(checkSql)) {
+	            check.setString(1, userid);
+	            check.setString(2, titoloPrincipale);
+	            try (ResultSet rs = check.executeQuery()) {
+	                if (!rs.next()) {
+	                    return false;  // Nessun consiglio da modificare
+	                }
+	            }
+	        }
+
+	        // Elimina consigli precedenti
+	        String deleteSql = "DELETE FROM ConsigliLibri WHERE userid = ? AND titoloLibro = ?";
+	        try (PreparedStatement delete = conn.prepareStatement(deleteSql)) {
+	            delete.setString(1, userid);
+	            delete.setString(2, titoloPrincipale);
+	            delete.executeUpdate();
+	        }
+
+	        // Inserisce i nuovi consigli
+	        String insertSql = "INSERT INTO ConsigliLibri (userid, titoloLibro, libroConsigliato) VALUES (?, ?, ?)";
+	        try (PreparedStatement pst = conn.prepareStatement(insertSql)) {
+	            for (String titolo : nuoviConsigliati) {
+	                pst.setString(1, userid);
+	                pst.setString(2, titoloPrincipale);
+	                pst.setString(3, titolo);
+	                pst.addBatch();
+	            }
+	            pst.executeBatch();
+	        }
+
+	        return true;
 	    }
 	
 	
