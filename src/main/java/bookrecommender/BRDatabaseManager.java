@@ -558,6 +558,7 @@ public class BRDatabaseManager {
 	        }
 
 	        // Elimina consigli precedenti
+	        //Elimina consigli precedenti
 	        String deleteSql = "DELETE FROM ConsigliLibri WHERE userid = ? AND titoloLibro = ?";
 	        try (PreparedStatement delete = conn.prepareStatement(deleteSql)) {
 	            delete.setString(1, userid);
