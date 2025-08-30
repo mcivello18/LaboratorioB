@@ -1723,7 +1723,7 @@ public class clientBR extends Application {
                     dettaglioBox.getChildren().add(new Label("Nessun utente ha consigliato questo libro."));
                 } else {
                     
-                	VBox utentiBox = new VBox(2); // Spaziatura verticale tra gli elementi
+                	VBox utentiBox = new VBox(2); 
                 	Label header = new Label("Utenti che hanno consigliato questo libro:");
                 	utentiBox.getChildren().add(header);
 

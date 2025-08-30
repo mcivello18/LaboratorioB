@@ -39,7 +39,7 @@ public class ServerSlave extends Thread {
 	            List<String> titoli = (List<String>) in.readObject();
 
 	            boolean success = b.creaLibreria(userid, nomeLibreria, titoli);
-	            out.writeObject(success);  // true = creazione ok, false = libreria già esistente
+	            out.writeObject(success);  
 	            break;
 	        }
 	        case "ricercaLibri": {
