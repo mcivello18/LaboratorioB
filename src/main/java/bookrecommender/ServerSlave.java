@@ -52,9 +52,9 @@ public class ServerSlave extends Thread {
 	            break;
 	        }
 	        case "getLibrerieConLibriDiUtente":{
-	        	   String userid = (String) in.readObject();  // leggi userid dal client
+	        	   String userid = (String) in.readObject();  //leggi userid dal client
 	        	    List<Libreria> librerieList = b.getLibrerieConLibriDiUtente(userid);
-	        	    out.writeObject(librerieList);             // invia la lista di librerie + libri al client
+	        	    out.writeObject(librerieList);  //invia la lista di librerie + libri al client
 	        	    out.flush();
 	        		break;
 	        }

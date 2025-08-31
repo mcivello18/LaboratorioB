@@ -39,7 +39,7 @@ public class BRDatabaseManager {
 	    
 	    public synchronized boolean registraUtente(Utente u) throws SQLException {
 	        if (existsUserid(u.getUserid()) || existsEmail(u.getEmail())) {
-	            return false; // già presente userid o email
+	            return false; //già presente userid o email
 	        }
 	        String sql = "INSERT INTO UtentiRegistrati (nome, cognome, codice_fiscale, email, userid, password) VALUES (?, ?, ?, ?, ?, ?)";
 	        try (PreparedStatement pst = conn.prepareStatement(sql)) {
@@ -64,13 +64,13 @@ public class BRDatabaseManager {
 	                    String pwdFromDb = rs.getString("password");
 	                    return pwdFromDb.equals(password);  
 	                } else {
-	                    return false; // userid non trovato
+	                    return false; //userid non trovato
 	                }
 	            }
 	        }
 	    }
 
-	    // Chiude la connessione (da chiamare alla fine)
+	    
 	    public void close() throws SQLException {
 	        if (conn != null && !conn.isClosed()) {
 	            conn.close();
@@ -126,7 +126,7 @@ public class BRDatabaseManager {
 	            pst.setString(1, userid);
 	            pst.setString(2, nomeLibreria);
 	            try (ResultSet rs = pst.executeQuery()) {
-	                return rs.next();  // true se esiste almeno una riga
+	                return rs.next();  //true se esiste almeno una riga
 	            }
 	        }
 	    }
@@ -142,7 +142,7 @@ public class BRDatabaseManager {
 	                    String nomeLibreria = rs.getString("nomeLibreria");
 	                    String titolo = rs.getString("titolo");
 
-	                    // Cerca se la libreria è già nella lista
+	                    //Cerca se la libreria è già nella lista
 	                    Libreria libreria = null;
 	                    for (Libreria l : librerieList) {
 	                        if (l.getNomeLibreria().equals(nomeLibreria)) {
@@ -151,13 +151,13 @@ public class BRDatabaseManager {
 	                        }
 	                    }
 
-	                    // Se non c'è, la creo e la aggiungo
+	                    //Se non c'è, la libreria viene creata e aggiunta
 	                    if (libreria == null) {
 	                        libreria = new Libreria(nomeLibreria);
 	                        librerieList.add(libreria);
 	                    }
 
-	                    // Aggiungo il titolo
+	                    //viene aggiunto il titolo
 	                    libreria.addTitolo(titolo);
 	                }
 	            }
@@ -244,14 +244,14 @@ public class BRDatabaseManager {
 	    }
 	    
 	    public synchronized boolean consigliaLibri(String userid, String titoloPrincipale, List<String> consigliati) throws SQLException {
-	        // Verifica se l’utente ha già consigliato libri per questo titolo
+	        //Verifica se l’utente ha già consigliato libri per questo titolo
 	        String checkSql = "SELECT 1 FROM ConsigliLibri WHERE userid = ? AND titoloLibro = ? LIMIT 1";
 	        try (PreparedStatement check = conn.prepareStatement(checkSql)) {
 	            check.setString(1, userid);
 	            check.setString(2, titoloPrincipale);
 	            try (ResultSet rs = check.executeQuery()) {
 	                if (rs.next()) {
-	                    return false;  // già esiste un consiglio per questo libro da parte di questo utente
+	                    return false;  //già esiste un consiglio per questo libro da parte di questo utente
 	                }
 	            }
 	        }
@@ -492,12 +492,12 @@ public class BRDatabaseManager {
 	            int originalita, String notaOriginalita,
 	            int edizione, String notaEdizione
 	    ) throws SQLException {
-	        // Verifica se la valutazione esiste già
+	        //Verifica se la valutazione esiste già
 	        if (!valutazioneEsistente(utente, titolo)) {
-	            return false;  // Non esiste → non si può modificare
+	            return false;  //Non esiste, quindi non si può modificare
 	        }
 
-	        // Controlla validità dei voti e delle note
+	        //Controlla validità dei voti e delle note
 	        if (!isValutazioneValida(stile, contenuto, gradevolezza, originalita, edizione)) {
 	            return false;
 	        }
@@ -545,14 +545,14 @@ public class BRDatabaseManager {
 	    
 	    
 	    public synchronized boolean modificaConsigliLibri(String userid, String titoloPrincipale, List<String> nuoviConsigliati) throws SQLException {
-	        // Verifica che esistano consigli precedenti per questo libro da parte dell’utente
+	        //Verifica che esistano consigli precedenti per questo libro da parte dell’utente
 	        String checkSql = "SELECT 1 FROM ConsigliLibri WHERE userid = ? AND titoloLibro = ? LIMIT 1";
 	        try (PreparedStatement check = conn.prepareStatement(checkSql)) {
 	            check.setString(1, userid);
 	            check.setString(2, titoloPrincipale);
 	            try (ResultSet rs = check.executeQuery()) {
 	                if (!rs.next()) {
-	                    return false;  // Nessun consiglio da modificare
+	                    return false;  //Nessun consiglio da modificare
 	                }
 	            }
 	        }
@@ -566,7 +566,7 @@ public class BRDatabaseManager {
 	            delete.executeUpdate();
 	        }
 
-	        // Inserisce i nuovi consigli
+	        //Inserisce i nuovi consigli
 	        String insertSql = "INSERT INTO ConsigliLibri (userid, titoloLibro, libroConsigliato) VALUES (?, ?, ?)";
 	        try (PreparedStatement pst = conn.prepareStatement(insertSql)) {
 	            for (String titolo : nuoviConsigliati) {

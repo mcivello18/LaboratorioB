@@ -105,7 +105,7 @@ public class clientBR extends Application {
             restoreWindowState();
         });
 
-        menuLayout.getChildren().addAll(btnLogin, btnRegister, btnViewBook); // AGGIUNTO
+        menuLayout.getChildren().addAll(btnLogin, btnRegister, btnViewBook); 
         return new Scene(menuLayout, 300, 180);
 
        
@@ -482,7 +482,7 @@ public class clientBR extends Application {
         
         btnViewBook.setOnAction(e -> {
             saveWindowState();
-            visualizzaLibriUI1(primaryStage); // 
+            visualizzaLibriUI1(primaryStage); 
             restoreWindowState();
         });
         btnBack.setOnAction(e -> {
@@ -536,7 +536,7 @@ public class clientBR extends Application {
         TableView<LibroEntry> tableLibri = new TableView<>();
         tableLibri.setPrefHeight(300);
         
-        // Definizione colonne
+        //Definizione colonne
         TableColumn<LibroEntry, Boolean> colSeleziona = new TableColumn<>("Seleziona");
         colSeleziona.setCellValueFactory(param -> param.getValue().selectedProperty());
         colSeleziona.setCellFactory(CheckBoxTableCell.forTableColumn(colSeleziona));
@@ -556,7 +556,7 @@ public class clientBR extends Application {
         
         Label lblMessaggio = new Label();
         
-        // Paginazione (offset e limit)
+        //Paginazione (offset e limit)
         final int limit = 50;
         final int[] offset = {0};
         
@@ -567,9 +567,9 @@ public class clientBR extends Application {
         
         HBox paginazione = new HBox(10, btnPrev, btnNext);
         
-        // Cerca libri e aggiorna tabella
+        //Cerca libri e aggiorna tabella
         btnCerca.setOnAction(e -> {
-            offset[0] = 0;  // reset offset
+            offset[0] = 0;  //reset offset
             caricaLibri(tfCercaLibro.getText().trim(), offset[0], limit, tableLibri, btnPrev, btnNext, lblMessaggio);
         });
         
@@ -598,7 +598,7 @@ public class clientBR extends Application {
                 return;
             }
             
-            // Raccogli libri selezionati
+            //vengono raccolti i libri selezionati
             List<String> titoliSelezionati = new ArrayList<>();
             for (LibroEntry libro : libriSelezionati) {
                 titoliSelezionati.add(libro.getTitolo());
@@ -675,7 +675,7 @@ public class clientBR extends Application {
             for (String[] libro : risultati) {
                 LibroEntry entry = new LibroEntry(libro[0], libro[1], libro[2]);
 
-                // Se questo libro è già stato selezionato, seleziona la checkbox
+                //Se questo libro è già stato selezionato, seleziona la checkbox
                 for (LibroEntry selezionato : libriSelezionati) {
                     if (selezionato.getTitolo().equals(entry.getTitolo())) {
                         entry.setSelected(true);
@@ -683,15 +683,15 @@ public class clientBR extends Application {
                     }
                 }
 
-                // Aggiungi listener per aggiornare la lista globale di selezionati
+                //Aggiungi listener per aggiornare la lista globale di selezionati
                 entry.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
                     if (isNowSelected) {
-                        // Aggiungi solo se non è già presente
+                        //Aggiungi solo se non è già presente
                         if (libriSelezionati.stream().noneMatch(l -> l.getTitolo().equals(entry.getTitolo()))) {
                             libriSelezionati.add(entry);
                         }
                     } else {
-                        // Rimuovi dalla lista globale
+                        //Rimuovi dalla lista globale
                         libriSelezionati.removeIf(l -> l.getTitolo().equals(entry.getTitolo()));
                     }
                 });
@@ -775,7 +775,7 @@ public class clientBR extends Application {
         layout.setBackground(new Background(backgroundImage));
         Label lbl = new Label("Scegli il libro da valutare:");
 
-        // Una TreeView per librerie e titoli
+        //Una TreeView per librerie e titoli
         TreeItem<String> root = new TreeItem<>("Librerie");
         root.setExpanded(true);
         for (Libreria lib : librerie) {
@@ -953,13 +953,13 @@ public class clientBR extends Application {
     
     private void mostraFinestraConsigli() {
         try {
-            // Chiede al server le librerie con libri dell'utente
+            //Chiede al server le librerie con libri dell'utente
             out.writeObject("getLibrerieConLibriDiUtente");
             out.writeObject(useridLoggato);
             @SuppressWarnings("unchecked")
             List<Libreria> librerie = (List<Libreria>) in.readObject();
 
-            // Prima scena: scegliere libro per cui consigliare
+            //Prima scena: scegliere libro per cui consigliare
             Scene scenaSelezionaLibro = createChooseBookToRecommendScene(librerie);
             saveWindowState();
             primaryStage.setScene(scenaSelezionaLibro);
@@ -1056,11 +1056,11 @@ public class clientBR extends Application {
         Label lblInfo = new Label("Libro da consigliare: " + libroDaConsigliare);
         Label lblIstruzioni = new Label("Seleziona fino a 3 libri da consigliare:");
 
-        // Lista per tenere traccia dei libri selezionati
+        //Lista per tenere traccia dei libri selezionati
         List<LibroEntry> libriConsigliatiSelezionati = new ArrayList<>();
         Set<String> titoliSelezionati=new HashSet<>();
 
-        // Container per le librerie e i loro libri con checkbox
+        //Container per le librerie e i loro libri con checkbox
         VBox librerieBox = new VBox(10);
         ScrollPane scrollPane = new ScrollPane(librerieBox);
         scrollPane.setFitToWidth(true);
@@ -1068,7 +1068,7 @@ public class clientBR extends Application {
 
         Label lblMsgErrore = new Label();
 
-        // Costruisco la UI: per ogni libreria, nome + libri con checkbox (escludo libroDaConsigliare)
+        //Costruisco la UI: per ogni libreria, nome + libri con checkbox (escludo libroDaConsigliare)
         for (Libreria lib : librerie) {
             VBox libBox = new VBox(5);
             Label lblLibName = new Label(lib.getNomeLibreria());
@@ -1076,19 +1076,19 @@ public class clientBR extends Application {
             libBox.getChildren().add(lblLibName);
 
             for (String titolo : lib.getTitoli()) {
-                if (titolo.equals(libroDaConsigliare)) continue; // non selezionabile
+                if (titolo.equals(libroDaConsigliare)) continue; //non selezionabile
 
                 CheckBox cb = new CheckBox(titolo);
 
                 cb.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
                     if (!cb.isSelected()) {
-                        // Tentativo di selezione
+                        //Tentativo di selezione
                         if (libriConsigliatiSelezionati.size() >= 3) {
-                            event.consume(); // blocca la selezione
+                            event.consume(); //blocca la selezione
                             lblMsgErrore.setText("Puoi selezionare al massimo 3 libri da consigliare.");
                             lblMsgErrore.setStyle("-fx-text-fill: red;");
                         } else if (titoliSelezionati.contains(titolo)) {
-                            event.consume(); // blocca la selezione
+                            event.consume(); //blocca la selezione
                             lblMsgErrore.setText("Non puoi mettere 2 volte lo stesso libro tra i libri consigliati.");
                             lblMsgErrore.setStyle("-fx-text-fill: red;");
                         } else {
@@ -1100,7 +1100,7 @@ public class clientBR extends Application {
                             event.consume(); 
                         }
                     } else {
-                        // Deselezione
+                        //Deselezione
                         cb.setSelected(false);
                         libriConsigliatiSelezionati.removeIf(l -> l.getTitolo().equals(titolo));
                         titoliSelezionati.remove(titolo);
@@ -1131,7 +1131,7 @@ public class clientBR extends Application {
                 out.writeObject(useridLoggato);
                 out.writeObject(libroDaConsigliare);
 
-                // Invia lista titoli consigliati
+                //Invia lista titoli consigliati
                 List<String> titoliDaConsigliare = new ArrayList<>();
                 for (LibroEntry le : libriConsigliatiSelezionati) {
                     titoliDaConsigliare.add(le.getTitolo());
@@ -1410,7 +1410,7 @@ public class clientBR extends Application {
                 	
                 	
                 	
-                	VBox utentiBox = new VBox(2); // Spaziatura verticale tra gli elementi
+                	VBox utentiBox = new VBox(2); 
                 	Label header = new Label("Utenti che hanno consigliato questo libro:");
                 	utentiBox.getChildren().add(header);
 
@@ -1439,7 +1439,7 @@ public class clientBR extends Application {
                 } else {
                     for (Map.Entry<String, List<String>> entry : mapConsigli.entrySet()) {
                         
-                    	VBox consigliUtenteBox = new VBox(2); // margine tra le righe
+                    	VBox consigliUtenteBox = new VBox(2); 
                     	Label utenteLabel = new Label("L'utente " + entry.getKey() + " consiglia i seguenti libri:");
                     	consigliUtenteBox.getChildren().add(utenteLabel);
 
@@ -1751,7 +1751,7 @@ public class clientBR extends Application {
                 } else {
                     for (Map.Entry<String, List<String>> entry : mapConsigli.entrySet()) {
                         
-                    	VBox consigliUtenteBox = new VBox(2); // margine tra le righe
+                    	VBox consigliUtenteBox = new VBox(2); 
                     	Label utenteLabel = new Label("L'utente " + entry.getKey() + " consiglia i seguenti libri:");
                     	consigliUtenteBox.getChildren().add(utenteLabel);
 
