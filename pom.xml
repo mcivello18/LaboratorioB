@@ -134,6 +134,173 @@
         </execution>
       </executions>
     </plugin>
+     <plugin>
+  <artifactId>maven-assembly-plugin</artifactId>
+  <version>3.6.0</version>
+  <executions>
+    <execution>
+      <id>make-assembly-server</id>
+      <phase>package</phase>
+      <goals>
+        <goal>single</goal>
+      </goals>
+      <configuration>
+        <finalName>server-app</finalName>
+        <archive>
+          <manifest>
+            <mainClass>bookrecommender.serverBR</mainClass>
+          </manifest>
+        </archive>
+        <descriptorRefs>
+          <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+      </configuration>
+    </execution>
+
+    <execution>
+      <id>make-assembly-client</id>
+      <phase>package</phase>
+      <goals>
+        <goal>single</goal>
+      </goals>
+      <configuration>
+        <finalName>client-app</finalName>
+        <archive>
+          <manifest>
+            <mainClass>bookrecommender.clientBR</mainClass>
+          </manifest>
+        </archive>
+        <descriptorRefs>
+          <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
+
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-javadoc-plugin</artifactId>
+  <version>3.6.3</version>
+  <executions>
+    <execution>
+      <id>attach-javadocs</id>
+      <goals>
+        <goal>jar</goal>
+      </goals>
+    </execution>
+  </executions>
+  <configuration>
+  <doctitle>Documentazione API - Book Recommender</doctitle>
+  <encoding>UTF-8</encoding>
+  <charset>UTF-8</charset>
+  <show>private</show>
+</configuration>
+</plugin>
+
+<plugin>
+  <groupId>org.codehaus.mojo</groupId>
+  <artifactId>sql-maven-plugin</artifactId>
+  <version>3.0.0</version>
+  <dependencies>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.5.0</version>
+    </dependency>
+  </dependencies>
+  <executions>
+	  
+	  <!--
+    <execution>
+      <id>drop-database</id>
+      <phase>compile</phase>
+      <goals>
+        <goal>execute</goal>
+      </goals>
+      <configuration>
+        <driver>org.postgresql.Driver</driver>
+        <url>jdbc:postgresql://localhost:5432/postgres</url>
+        <username>${db.user}</username>
+        <password>${db.pass}</password>
+        <srcFiles>
+          <srcFile>src/main/resources/sql/dropDatabase.sql</srcFile>
+        </srcFiles>
+      </configuration>
+    </execution>
+    -->
+    <!--
+
+    <execution>
+      <id>create-database</id>
+      <phase>compile</phase>
+      <goals>
+        <goal>execute</goal>
+      </goals>
+      <configuration>
+        <driver>org.postgresql.Driver</driver>
+        <url>jdbc:postgresql://localhost:5432/postgres</url>
+        <username>${db.user}</username>
+        <password>${db.pass}</password>
+        <srcFiles>
+          <srcFile>src/main/resources/sql/createDatabase.sql</srcFile>
+        </srcFiles>
+      </configuration>
+    </execution>
+    -->
+
+    <execution>
+      <id>create-libri-table</id>
+      <phase>compile</phase>
+      <goals>
+        <goal>execute</goal>
+      </goals>
+      <configuration>
+        <driver>org.postgresql.Driver</driver>
+        <url>jdbc:postgresql://localhost:5432/BookRecommender</url>
+        <username>${db.user}</username>
+        <password>${db.pass}</password>
+        <srcFiles>
+          <srcFile>src/main/resources/sql/CreateLibriTable.sql</srcFile>
+        </srcFiles>
+      </configuration>
+    </execution>
+
+    <execution>
+      <id>populate-libri</id>
+      <phase>compile</phase>
+      <goals>
+        <goal>execute</goal>
+      </goals>
+      <configuration>
+        <driver>org.postgresql.Driver</driver>
+        <url>jdbc:postgresql://localhost:5432/BookRecommender</url>
+        <username>${db.user}</username>
+        <password>${db.pass}</password>
+        <srcFiles>
+          <srcFile>src/main/resources/sql/libri.sql</srcFile>
+        </srcFiles>
+      </configuration>
+    </execution>
+
+    <execution>
+      <id>alter-and-create-others</id>
+      <phase>compile</phase>
+      <goals>
+        <goal>execute</goal>
+      </goals>
+      <configuration>
+        <driver>org.postgresql.Driver</driver>
+        <url>jdbc:postgresql://localhost:5432/BookRecommender</url>
+        <username>${db.user}</username>
+        <password>${db.pass}</password>
+        <srcFiles>
+          <srcFile>src/main/resources/sql/AlterAndCreateTables.sql</srcFile>
+        </srcFiles>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
   </plugins>
   </build>
 </project>
